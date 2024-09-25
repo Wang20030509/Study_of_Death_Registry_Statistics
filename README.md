@@ -20,7 +20,7 @@ The repo is structured as:
 
 ## LLM (Large Language Model) Usage
 
-This project used assistance from OpenAI’s GPT-4 model for guidance on structuring the project, writing code, and generating some of the textual content for documentation. The analytical work, data processing, and statistical methods were executed independently by the researcher, and all code implementations are the original work of the repository owner.
+This project used assistance from OpenAI’s GPT-4 model for guidance on structuring the project, writing code, and generating some of the textual content for documentation.  The entire chat history is available in inputs/llms/usage.txt.
 
 ## Acknowledgments
 
