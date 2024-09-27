@@ -39,6 +39,11 @@ total_deaths <- read_csv("../data/analysis_data/summarize_data.csv",
                          show_col_types = FALSE)
 avg_death <- read_csv("../data/analysis_data/avg_deaths_by_month.csv",
                       show_col_types = FALSE)
+
+place_summary <- read_csv("../data/analysis_data/summarized_place_data.csv",
+                      show_col_types = FALSE)
+civic_summary <- read_csv("../data/analysis_data/summarized_civic_data.csv",
+                      show_col_types = FALSE)
 ```
 
 # Introduction
@@ -87,7 +92,16 @@ as well as limitations and potential next steps.
 
 # Data {#sec-data}
 
-Some of our data is of deaths (@fig-deaths), from @deathRegistryData.
+The datasets used for this report are the latest delay statistics from the 2023 year, `Death Registry Data` [@deathRegistryData], which was published by the City Clerk's Office from `Open Data Toronto` [@rOpenDataToronto].
+
+These deaths registry statistics were downloaded, cleaned, parsed, analyzed, and visualized using R [@citeR], a statistical programming language, with package support from `tidyverse` [@citetidyverse], a collection of libraries which included the following packages that were utilized: 
+
+* `ggplot2` [@citeggplot] 
+* `dplyr` [@citedplyr] 
+* `readr` [@citereadr] 
+* `tibble` [@citetibble]
+
+For additional assistance with cleaning, the `janitor` [@citejanitor] package was used. For additional assistance with report generation the `knitr` [@citeknitr] package was used.
 
 ## Overview Data
 
@@ -100,6 +114,18 @@ Some of our data is of deaths (@fig-deaths), from @deathRegistryData.
 kable(head(raw_data))
 
 ```
+
+The Death Registry Statistics dataset provided by the City of Toronto Open Data team contains key information about death registrations across various civic centers in Toronto. The dataset includes the following columns:
+
+* CIVIC_CENTRE: This column represents the civic center code, corresponding to one of Toronto’s four main civic centers: Scarborough (SC), North York (NY), Toronto (TO), and Etobicoke (ET). These civic centers are used to geographically categorize the death registrations.
+
+* DEATH_LICENSES: This column records the number of deaths registered within a given month at each respective civic center. It represents the official count of death licenses issued, reflecting the mortality data across the city over different time periods.
+
+* PLACE_OF_DEATH: This column provides information on where the death occurred. It indicates whether the death took place inside the City of Toronto or outside its city limits. This information can help to identify trends in deaths occurring within the jurisdiction of the city as opposed to those occurring elsewhere.
+
+* TIME_PERIOD: This column captures the specific month and year during which the death licenses were registered. The time period is formatted as "YYYY-MM", allowing for temporal analysis of death registrations over time. The combination of month and year in this column enables the dataset to be used for tracking changes in death registration patterns on a monthly and yearly basis.
+
+The death registry that @tbl-death_registry_data samples contains 947 entries in total. The dataset provides valuable insights into the geographic and temporal distribution of death registrations across Toronto, which is the main dataset used to analyze seasonal mortality patterns and potential regional disparities from 2011 to 2023. 
 
 ## Cleaned Data
 
@@ -127,28 +153,21 @@ data |>
 #| label: tbl-summerized_data
 #| tbl-cap: "Summarized Data"
 #| warning: false
-#| tbl-subcap: ["Total Death toll by Season (2011-2023)", "Average Deaths by Month (2011-2023)"]
+#| tbl-subcap: ["Total Death toll by Season (2011-2023)", "Average Deaths by Month (2011-2023)","Death Toll by Place of Death Across 12 Months","Death Toll by Civic Centre Across 12 Months"]
 #| layout-ncol: 2
 
-kable(total_deaths, col.names = c("Season", "Civic Centre", "Death Toll"))
+kable(head(total_deaths), col.names = c("Season", "Civic Centre", "Death Toll"))
 
-kable(avg_death, col.names = c("Month", "Mean of the Death Toll"))
-```
+kable(head(avg_death), col.names = c("Month", "Mean of the Death Toll"))
 
-And also planes (@fig-planes). (You can change the height and width, but
-don't worry about doing that until you have finished every other aspect
-of the paper - Quarto will try to make it look nice and the defaults
-usually work well once you have enough text.)
+kable(head(place_summary), col.names = c("Month", "Place of Death", "Death Toll"))
 
-```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
-#| echo: false
-#| warning: false
-#| message: false
+kable(head(civic_summary), col.names = c("Month", "Civic Centre", "Death Toll"))
 
 
 ```
+
+
 
 # Results {#sec-results}
 
@@ -156,6 +175,41 @@ Our results are summarized in @fig-deaths
 Something
 Something
 Something
+
+```{r warning=FALSE}
+#| label: fig-place_summary
+#| fig-cap: Death Toll by Civic Centre Across 12 Months (2011-2023)
+#| echo: false
+
+# Create the line graph
+ggplot(place_summary, aes(x = month, y = death_licenses, color = place_of_death, group = place_of_death)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Death Licenses by Place of Death Across 12 Months",
+       x = "Month",
+       y = "Total Death Licenses",
+       color = "Place of Death") +
+  theme_minimal() +
+  scale_x_discrete(limits = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+```
+
+```{r warning=FALSE}
+#| label: fig-civic_summary
+#| fig-cap: Death Toll by Civic Centre Across 12 Months (2011-2023)
+#| echo: false
+
+# Create the line graph
+ggplot(civic_summary, aes(x = month, y = death_licenses, color = civic_centre, group = civic_centre)) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Month",
+       y = "Total Death Licenses",
+       color = "civic_centre") +
+  theme_minimal() +
+  scale_x_discrete(limits = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+```
+
+
 
 ```{r warning=FALSE}
 #| label: fig-deaths
