@@ -22,8 +22,7 @@ cleaned_data <-
            into = c("year", "month"),
            sep = "-",
            convert = TRUE) |>   # Convert year and month to integer
-  mutate(date = sprintf("%s-%s", year, str_pad(month, 2, pad = "0")),  # Create a date column with day
-         civic_centre = str_to_upper(civic_centre),  # Convert civic centre names to uppercase
+  mutate(civic_centre = str_to_upper(civic_centre),  # Convert civic centre names to uppercase
          place_of_death = str_to_title(place_of_death),  # Convert place of death to title case
          session = case_when(  # Assign session based on month
            month %in% c(3, 4, 5) ~ "Spring",
