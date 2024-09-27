@@ -40,9 +40,20 @@ total_deaths <- aggregate(death_licenses ~ season + civic_centre,
 avg_deaths_by_month <- aggregate(death_licenses ~ month, data = cleaned_data, 
                                  FUN = mean) 
 
+# summarize the data by place of death
+place_summary <- aggregate(death_licenses ~ month + place_of_death, data = cleaned_data,
+                           sum)
+
+# summarize the data by civic centre
+civic_summary <- aggregate(death_licenses ~ month + civic_centre, data = cleaned_data,
+                           sum)
+
 #### Save data ####
 # Save the cleaned data to the analysis folder
 write_csv(cleaned_data, "data/analysis_data/cleaned_data.csv")
 write_csv(total_deaths, "data/analysis_data/summarize_data.csv")
 write_csv(avg_deaths_by_month, "data/analysis_data/avg_deaths_by_month.csv")
+write_csv(place_summary, "data/analysis_data/summarized_place_data.csv")
+write_csv(civic_summary, "data/analysis_data/summarized_civic_data.csv")
+
 
