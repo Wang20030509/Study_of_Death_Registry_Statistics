@@ -3,7 +3,7 @@ title: "The Impact of Seasonal Changes on Mortality Rates in Toronto"
 subtitle: "Death Registry Statistics in Toronto"
 author: 
   - Doran Wang
-thanks: "Code and data are available at: [https://github.com/Wang20030509/Sta304-Term-Paper-1](https://github.com/Wang20030509/Sta304-Term-Paper-1)"
+thanks: "Code and data are available at: [https://github.com/Wang20030509/Study_of_Death_Registry_Statistics](https://github.com/Wang20030509/Study_of_Death_Registry_Statistics)"
 date: today
 date-format: long
 abstract: "This paper analyzes death toll data across four civic centers (Scarborough, North York, Toronto and Etobicoke) from 2011 to 2024, with the goal of identifying seasonal patterns and regional differences in mortality, which is made available to the public from Open Data Toronto. Utilizing death registry data, we categorized the deaths by season—Winter, Spring, Summer, and Fall—and aggregated the death tolls across the years for each region. The analysis revealed notable variations in mortality trends across both seasons and civic centers. The results show that Winter consistently reported higher death tolls compared to other seasons across most regions. Using visual representations generated through ggplot2, the findings highlight significant regional disparities, which suggest possible influences of environmental or socio-economic factors contributing to seasonal mortality trends."
