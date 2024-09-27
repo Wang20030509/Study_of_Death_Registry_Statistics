@@ -3,18 +3,15 @@ title: "The Impact of Seasonal Changes on Mortality Rates in Toronto"
 subtitle: "Death Registry Statistics in Toronto"
 author: 
   - Doran Wang
-thanks: "Code and data are available at: https://github.com/Wang20030509/Sta304-Term-Paper-1"
+thanks: "Code and data are available at: [https://github.com/Wang20030509/Sta304-Term-Paper-1](https://github.com/Wang20030509/Sta304-Term-Paper-1)"
 date: today
 date-format: long
-abstract: "This paper analyzes death toll data across four civic centers (Scarborough, North York, Toronto and Etobicoke)) from 2011 to 2023, with the goal of identifying seasonal patterns and regional differences in mortality, which is made available to the public from Open Data Toronto. Utilizing death registry data, we categorized the deaths by season—Winter, Spring, Summer, and Fall—and aggregated the death tolls across the years for each region. The analysis revealed notable variations in mortality trends across both seasons and civic centers. The results show that Winter consistently reported higher death tolls compared to other seasons across most regions. Using visual representations generated through ggplot2, the findings highlight significant regional disparities, which suggest possible influences of environmental or socio-economic factors contributing to seasonal mortality trends."
+abstract: "This paper analyzes death toll data across four civic centers (Scarborough, North York, Toronto and Etobicoke) from 2011 to 2024, with the goal of identifying seasonal patterns and regional differences in mortality, which is made available to the public from Open Data Toronto. Utilizing death registry data, we categorized the deaths by season—Winter, Spring, Summer, and Fall—and aggregated the death tolls across the years for each region. The analysis revealed notable variations in mortality trends across both seasons and civic centers. The results show that Winter consistently reported higher death tolls compared to other seasons across most regions. Using visual representations generated through ggplot2, the findings highlight significant regional disparities, which suggest possible influences of environmental or socio-economic factors contributing to seasonal mortality trends."
 format: pdf
 toc: true
 toc-title: "Table of Contents"
 number-sections: true
 bibliography: references.bib
-editor: 
-  markdown: 
-    wrap: 72
 ---
 
 ```{r}
@@ -48,17 +45,17 @@ civic_summary <- read_csv("../data/analysis_data/summarized_civic_data.csv",
 
 # Introduction
 
-Seasonal variations in mortality have been a focus of
-public health research for many years, driven by fluctuations in
-temperature, disease prevalence, and environmental factors. In colder
-regions, such as Toronto, winter months often coincide with increased
-mortality, particularly among vulnerable populations like the elderly or
-homeless. Numerous studies have linked these seasonal changes to
-temperature variations, with colder months typically showing elevated
-mortality rates [@citeSeasonality] [@citeSeasonal]
+Seasonal variations in mortality have been a focus of public health
+research for many years, driven by fluctuations in temperature, disease
+prevalence, and environmental factors. In colder regions, such as
+Toronto, winter months often coincide with increased mortality,
+particularly among vulnerable populations like the elderly or homeless.
+Numerous studies have linked these seasonal changes to temperature
+variations, with colder months typically showing elevated mortality
+rates [@citeSeasonality] [@citeSeasonal]
 
 This study examines the impact of seasonal changes on death tolls in
-Toronto between 2011 and 2023, utilizing death registry data from Open
+Toronto between 2011 and 2024, utilizing death registry data from Open
 Data Toronto. By categorizing deaths by season—Winter, Spring, Summer,
 and Fall—and analyzing regional variations across the city's four civic
 centers (Scarborough, North York, Toronto, and Etobicoke), the paper
@@ -86,22 +83,31 @@ these patterns is crucial for guiding policy decisions and healthcare
 resource allocation during high-risk periods [@citeBivariate].
 
 The remainder of this paper is structured as follows. @sec-data
-describes the dataset and cleaning methods used in the analysis. @sec-results 
-presents the results and key findings, and @sec-discussion offers a discussion of the implications of these results
-as well as limitations and potential next steps.
+describes the dataset and cleaning methods used in the analysis.
+@sec-results presents the results and key findings, and @sec-discussion
+offers a discussion of the implications of these results.Then, @sec-conclusion will be the conclusion
 
 # Data {#sec-data}
 
-The datasets used for this report are the latest delay statistics from the 2023 year, `Death Registry Data` [@deathRegistryData], which was published by the City Clerk's Office from `Open Data Toronto` [@rOpenDataToronto].
+The datasets used for this report are the latest delay statistics from
+the 2024 year, `Death Registry Data` [@deathRegistryData], which was
+published by the City Clerk's Office from `Open Data Toronto`
+[@rOpenDataToronto].
 
-These deaths registry statistics were downloaded, cleaned, parsed, analyzed, and visualized using R [@citeR], a statistical programming language, with package support from `tidyverse` [@citetidyverse], a collection of libraries which included the following packages that were utilized: 
+These deaths registry statistics were downloaded, cleaned, parsed,
+analyzed, and visualized using R [@citeR], a statistical programming
+language, with package support from `tidyverse` [@citetidyverse], a
+collection of libraries which included the following packages that were
+utilized:
 
-* `ggplot2` [@citeggplot] 
-* `dplyr` [@citedplyr] 
-* `readr` [@citereadr] 
-* `tibble` [@citetibble]
+-   `ggplot2` [@citeggplot]
+-   `dplyr` [@citedplyr]
+-   `readr` [@citereadr]
+-   `tibble` [@citetibble]
 
-For additional assistance with cleaning, the `janitor` [@citejanitor] package was used. For additional assistance with report generation the `knitr` [@citeknitr] package was used.
+For additional assistance with cleaning, the `janitor` [@citejanitor]
+package was used. For additional assistance with report generation the
+`knitr` [@citeknitr] package was used.
 
 ## Overview Data
 
@@ -112,20 +118,42 @@ For additional assistance with cleaning, the `janitor` [@citejanitor] package wa
 #| tbl-cap: "Sample Data"
 #| warning: false
 kable(head(raw_data))
-
 ```
 
-The Death Registry Statistics dataset provided by the City of Toronto Open Data team contains key information about death registrations across various civic centers in Toronto. The dataset includes the following columns:
+The Death Registry Statistics dataset provided by the City of Toronto
+Open Data team contains key information about death registrations across
+various civic centers in Toronto. The dataset includes the following
+columns:
 
-* CIVIC_CENTRE: This column represents the civic center code, corresponding to one of Toronto’s four main civic centers: Scarborough (SC), North York (NY), Toronto (TO), and Etobicoke (ET). These civic centers are used to geographically categorize the death registrations.
+-   CIVIC_CENTRE: This column represents the civic center code,
+    corresponding to one of Toronto’s four main civic centers:
+    Scarborough (SC), North York (NY), Toronto (TO), and Etobicoke (ET).
+    These civic centers are used to geographically categorize the death
+    registrations.
 
-* DEATH_LICENSES: This column records the number of deaths registered within a given month at each respective civic center. It represents the official count of death licenses issued, reflecting the mortality data across the city over different time periods.
+-   DEATH_LICENSES: This column records the number of deaths registered
+    within a given month at each respective civic center. It represents
+    the official count of death licenses issued, reflecting the
+    mortality data across the city over different time periods.
 
-* PLACE_OF_DEATH: This column provides information on where the death occurred. It indicates whether the death took place inside the City of Toronto or outside its city limits. This information can help to identify trends in deaths occurring within the jurisdiction of the city as opposed to those occurring elsewhere.
+-   PLACE_OF_DEATH: This column provides information on where the death
+    occurred. It indicates whether the death took place inside the City
+    of Toronto or outside its city limits. This information can help to
+    identify trends in deaths occurring within the jurisdiction of the
+    city as opposed to those occurring elsewhere.
 
-* TIME_PERIOD: This column captures the specific month and year during which the death licenses were registered. The time period is formatted as "YYYY-MM", allowing for temporal analysis of death registrations over time. The combination of month and year in this column enables the dataset to be used for tracking changes in death registration patterns on a monthly and yearly basis.
+-   TIME_PERIOD: This column captures the specific month and year during
+    which the death licenses were registered. The time period is
+    formatted as "YYYY-MM", allowing for temporal analysis of death
+    registrations over time. The combination of month and year in this
+    column enables the dataset to be used for tracking changes in death
+    registration patterns on a monthly and yearly basis.
 
-The death registry that @tbl-death_registry_data samples contains 947 entries in total. The dataset provides valuable insights into the geographic and temporal distribution of death registrations across Toronto, which is the main dataset used to analyze seasonal mortality patterns and potential regional disparities from 2011 to 2023. 
+The death registry that @tbl-death_registry_data samples contains 947
+entries in total. The dataset provides valuable insights into the
+geographic and temporal distribution of death registrations across
+Toronto, which is the main dataset used to analyze seasonal mortality
+patterns and potential regional disparities from 2011 to 2024.
 
 ## Cleaned Data
 
@@ -144,76 +172,70 @@ data |>
 
 ```
 
+To prepare the Death Registry Statistics dataset for analysis, several
+steps were taken to clean and standardize the data. These steps are
+essential to ensure consistency and accuracy, enabling meaningful
+comparisons across civic centers and time periods. The key cleaning
+procedures applied to the raw data include:
+
+1.  Renaming Columns: All column names were converted to more formal
+    ones (e.g., death_licenses was renamed to Death Toll) for easier
+    understanding in the table to the reader.
+
+2.  Splitting the TIME_PERIOD Column: The time_period column, originally
+    formatted as "YYYY-MM", was split into two separate columns: year
+    and month. This allowed for more granular temporal analysis and
+    easier data aggregation by season.
+
+3.  Categorizing MONTH into Seasons: Based on the month column, a new
+    season column was created to categorize each record into one of the
+    four seasons:
+
+    -   Winter (December, January, February)
+    -   Spring (March, April, May)
+    -   Summer (June, July, August)
+    -   Fall (September, October, November)
+
+4.  Standardizing PLACE_OF_DEATH: The place_of_death column, which
+    indicates whether the death occurred within or outside Toronto, was
+    standardized. The text was converted to title case to ensure
+    consistency (e.g., "Outside City Limits" and "Toronto").
+
+5.  Handling Missing or Invalid Data: Any missing or invalid entries in
+    the dataset were either filled or removed where necessary to
+    maintain the integrity of the analysis. For example, rows with
+    missing or invalid death license counts were excluded from the final
+    dataset.
+
+After applying these cleaning procedures, the dataset was saved in its
+cleaned form as cleaned_data.csv, and it is now ready for use in
+subsequent analysis. This cleaned version of the data contains reliable
+and well-structured information on death registrations by season and
+civic center from 2011 to 2024.
 
 ## Summarized Data
 
-```{r}
-#| echo: false
-#| eval: true
-#| label: tbl-summerized_data
-#| tbl-cap: "Summarized Data"
-#| warning: false
-#| tbl-subcap: ["Total Death toll by Season (2011-2023)", "Average Deaths by Month (2011-2023)","Death Toll by Place of Death Across 12 Months","Death Toll by Civic Centre Across 12 Months"]
-#| layout-ncol: 2
-
-kable(head(total_deaths), col.names = c("Season", "Civic Centre", "Death Toll"))
-
-kable(head(avg_death), col.names = c("Month", "Mean of the Death Toll"))
-
-kable(head(place_summary), col.names = c("Month", "Place of Death", "Death Toll"))
-
-kable(head(civic_summary), col.names = c("Month", "Civic Centre", "Death Toll"))
-
-
-```
+After cleaning and processing the Death Registry Statistics dataset, the
+data was aggregated and summarized to provide insights into seasonal and
+geographic trends in mortality across Toronto from 2011 to 2024. The
+summary tables are Total Death Toll by Season and Civic Centre, Average
+Deaths by Month, Death Toll by Place of Death, Death Toll by Civic
+Centre. As shown in Table 3 and for more detailed
+information, please refer to the [Appendix](#appendix). These summary
+tables are primarily intended to facilitate the plotting and analysis in
+the Results section.
 
 
 
 # Results {#sec-results}
 
-Our results are summarized in @fig-deaths
-Something
-Something
-Something
+Here are 3 part of result with figures
 
-```{r warning=FALSE}
-#| label: fig-place_summary
-#| fig-cap: Death Toll by Civic Centre Across 12 Months (2011-2023)
-#| echo: false
-
-# Create the line graph
-ggplot(place_summary, aes(x = month, y = death_licenses, color = place_of_death, group = place_of_death)) +
-  geom_line() +
-  geom_point() +
-  labs(title = "Death Licenses by Place of Death Across 12 Months",
-       x = "Month",
-       y = "Total Death Licenses",
-       color = "Place of Death") +
-  theme_minimal() +
-  scale_x_discrete(limits = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
-```
-
-```{r warning=FALSE}
-#| label: fig-civic_summary
-#| fig-cap: Death Toll by Civic Centre Across 12 Months (2011-2023)
-#| echo: false
-
-# Create the line graph
-ggplot(civic_summary, aes(x = month, y = death_licenses, color = civic_centre, group = civic_centre)) +
-  geom_line() +
-  geom_point() +
-  labs(x = "Month",
-       y = "Total Death Licenses",
-       color = "civic_centre") +
-  theme_minimal() +
-  scale_x_discrete(limits = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
-```
-
-
+## Distribution of deaths in different civic centers by season
 
 ```{r warning=FALSE}
 #| label: fig-deaths
-#| fig-cap: Total Death Toll by Season and Region (2011-2023)
+#| fig-cap: Total Death Toll by Season and Region (2011-2024)
 #| echo: false
 
 ggplot(total_deaths, aes(x = season, y = death_licenses, fill = season)) +
@@ -226,31 +248,26 @@ ggplot(total_deaths, aes(x = season, y = death_licenses, fill = season)) +
 
 ```
 
-```{r warning=FALSE}
-#| label: fig-Total_Deaths
-#| fig-cap: Total Death toll by Season (2011-2023)
-#| echo: false
+As shown in @fig-deaths The total death toll in each season reveals
+notable seasonal differences. Winter consistently reported higher death
+tolls, particularly in Etobicoke (ET) and North York (NY), compared to
+the other civic centers. This pattern suggests a potential link between
+colder weather and increased mortality, aligning with previous studies
+on the impact of temperature on health outcomes.
 
-# Plot the total deaths from 2011 to 2024
-ggplot(total_deaths, aes(x = season, y = death_licenses, fill = season)) +
-  geom_bar(stat = "identity", alpha = 1) +
-  scale_fill_manual(values = c("darkorange", "purple", "cyan4", "red")) + 
-  theme_minimal() +
-  labs(x = "Session", y = "Total Death Toll", fill = "Season") +
-  coord_flip()
 
-```
+## Distribution of mean of deaths overall months
 
 ```{r warning=FALSE}
 #| label: fig-avg_deaths_by_month
-#| fig-cap: Average Death Toll by Month (2011-2023)
+#| fig-cap: Average Death Toll by Month (2011-2024)
 #| echo: false
 
 avg_death$month <- factor(avg_death$month, 
                           levels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", 
                                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
 
-# Plot the average deaths by month from 2011 to 2023
+# Plot the average deaths by month from 2011 to 2024
 ggplot(avg_death, aes(x = factor(month), y = death_licenses, fill = factor(month))) +
   geom_bar(stat = "identity", alpha = 1) +
   theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
@@ -259,21 +276,97 @@ ggplot(avg_death, aes(x = factor(month), y = death_licenses, fill = factor(month
   labs(x = "Month", y = "Average Death Toll", fill = "Month") 
 ```
 
+As shown in @fig-avg_deaths_by_month January consistently reported the
+highest average death toll, with a mean of 336 (from
+Table 3, see more detail in [Appendix](#appendix))deaths.
+This could be attributed to the colder winter months in Toronto, which
+may exacerbate health conditions such as cardiovascular and respiratory
+issues. In contrast, the summer months, such as July and August,
+reported lower average death tolls.
+
+
+
+## Total death toll overall seasons
+```{r warning=FALSE}
+#| label: fig-Total_Deaths
+#| fig-cap: Total Death toll by Season (2011-2024)
+#| echo: false
+
+# Plot the total deaths from 2011 to 2024
+ggplot(total_deaths, aes(x = season, y = death_licenses, fill = season)) +
+  geom_bar(stat = "identity", alpha = 1) +
+  scale_fill_manual(values = c("darkorange", "purple", "cyan4", "red")) + 
+  theme_minimal() +
+  labs(x = "Season", y = "Total Death Toll", fill = "Season") +
+  coord_flip()
+
+```
+
+We can see intuitively from @fig-Total_Deaths that the death toll in
+winter and spring, two seasons with relatively low temperatures, is
+higher than that in summer and fall.Also, there are more deaths in fall
+than in summer, since the temperature gradually drops as fall begins.
+
+
+
+## Death toll trends vary by season
+```{r warning=FALSE}
+#| label: fig-place_summary
+#| fig-cap: Death Toll by Place of Death Across 12 Months (2011-2024)
+#| echo: false
+
+
+# Create the line graph
+ggplot(place_summary, aes(x = month, y = death_licenses, color = place_of_death, group = place_of_death)) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Month",
+       y = "Total Death Toll",
+       color = "Place of Death") +
+  theme_minimal() +
+  scale_x_discrete(limits = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+
+
+```
+
+
+
+```{r warning=FALSE}
+#| label: fig-civic_summary
+#| fig-cap: Death Toll by Civic Centre Across 12 Months (2011-2024)
+#| echo: false
+
+# Create the line graph
+ggplot(civic_summary, aes(x = month, y = death_licenses, color = civic_centre, group = civic_centre)) +
+  geom_line() +
+  geom_point() +
+  labs(x = "Month",
+       y = "Total Death Toll",
+       color = "Civic Centre") +
+  theme_minimal() +
+  scale_x_discrete(limits = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+```
+
+As @fig-place_summary and @fig-civic_summary shows, regardless of
+whether the death was found outside the city or in the Toronto area, the
+death toll curve is lowest in the summer (June-August), and starts to
+rise in the winter until it reaches its highest point in January. Even
+when we distinguish by civic centre, the curve is similar and within
+some errors.
+
+
 # Discussion {#sec-discussion}
 
-## First discussion point {#sec-first-point}
+The analysis of mortality trends in Toronto from 2011 to 2024 reveals significant seasonal and regional variations. Winter consistently shows the highest death tolls across all civic centers, particularly in Etobicoke and North York. This finding aligns with established research linking colder temperatures to increased mortality, especially among vulnerable populations such as the elderly and those with pre-existing health conditions. Cardiovascular and respiratory diseases, exacerbated by cold weather, likely contribute to these elevated death tolls in the winter months.
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The
-discussion is a chance to show off what you know and what you learnt
-from all this.
+Spring also exhibits relatively high mortality rates, possibly due to the lingering effects of cold temperatures and the transition between seasons. In contrast, summer consistently reports the lowest death tolls, likely due to milder temperatures and lower incidence of seasonal illnesses. Interestingly, fall shows an increase in death tolls as temperatures begin to drop, signaling the onset of winter-related health complications.
 
-## Second discussion point
+Regional disparities in mortality were evident, with Etobicoke consistently reporting the highest death tolls across all seasons. This may be attributed to socio-economic and environmental factors specific to the region, such as access to healthcare, population density, and the presence of vulnerable populations. North York also showed similar trends, while Toronto and Scarborough generally reported lower death tolls.
 
-## Third discussion point
+# Conclusion
 
-## Weaknesses and next steps
+This study provides valuable insights into the seasonal and regional patterns of mortality in Toronto over a 13-year period. The findings reinforce the significant impact of cold weather on mortality, particularly in winter and spring, and highlight the need for targeted public health interventions during these high-risk periods. The regional disparities observed suggest that localized factors play a crucial role in influencing mortality rates, indicating the need for region-specific strategies to reduce mortality.
 
-Weaknesses and next steps should also be included.
 
 \newpage
 
@@ -281,6 +374,58 @@ Weaknesses and next steps should also be included.
 
 # Appendix {.unnumbered}
 
+# Additional table details
+
+As shown in @tbl-a, the dataset was grouped by season and civic center to examine the variations in mortality over time. As shown in @tbl-b, an analysis of the monthly average death toll reveals interesting patterns throughout the year. As shown in @tbl-c, the dataset was further analyzed to examine the location of death registrations. The summarized data by civic center (@tbl-d) shows that Etobicoke (ET) consistently recorded the highest death tolls in all months.
+
+```{r}
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+#| label: tbl-a
+#| tbl-cap: "Total Death toll by Season (2011-2024)"
+
+kable(head(total_deaths), col.names = c("Season", "Civic Centre", "Death Toll"))
+```
+
+
+```{r}
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+#| label: tbl-b
+#| tbl-cap: "Average Deaths by Month (2011-2024)"
+
+kable(head(avg_death), col.names = c("Month", "Mean of the Death Toll"))
+```
+
+
+```{r}
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+#| label: tbl-c
+#| tbl-cap: "Death Toll by Place of Death Across 12 Months"
+
+kable(head(place_summary), col.names = c("Month", "Place of Death", "Death Toll"))
+```
+
+
+```{r}
+#| echo: false
+#| eval: true
+#| message: false
+#| warning: false
+#| label: tbl-d
+#| tbl-cap: "Death Toll by Civic Centre Across 12 Months"
+
+kable(head(civic_summary), col.names = c("Month", "Civic Centre", "Death Toll"))
+```
+
 \newpage
+
 
 # References
