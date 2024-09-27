@@ -107,7 +107,7 @@ kable(head(raw_data))
 #| echo: false
 #| eval: true
 #| label: tbl-cleaned_death_registry_data
-#| tbl-cap: "Sample Data"
+#| tbl-cap: "Sample Cleaned Data"
 #| warning: false
 
 data |>
@@ -116,6 +116,23 @@ data |>
     booktabs = TRUE
   )
 
+```
+
+
+## Summarized Data
+
+```{r}
+#| echo: false
+#| eval: true
+#| label: tbl-summerized_data
+#| tbl-cap: "Summarized Data"
+#| warning: false
+#| tbl-subcap: ["Total Death toll by Season (2011-2023)", "Average Deaths by Month (2011-2023)"]
+#| layout-ncol: 2
+
+kable(total_deaths, col.names = c("Season", "Civic Centre", "Death Toll"))
+
+kable(avg_death, col.names = c("Month", "Mean of the Death Toll"))
 ```
 
 And also planes (@fig-planes). (You can change the height and width, but
@@ -135,7 +152,10 @@ usually work well once you have enough text.)
 
 # Results {#sec-results}
 
-Our results are summarized in @tbl-modelresults.
+Our results are summarized in @fig-deaths
+Something
+Something
+Something
 
 ```{r warning=FALSE}
 #| label: fig-deaths
