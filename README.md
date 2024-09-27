@@ -1,4 +1,4 @@
-# The Impact of Winter and Summer Seasons on Mortality Rates in Toronto (Changed)
+# The Impact of Winter and Summer Seasons on Mortality Rates in Toronto
 
 ## Overview
 

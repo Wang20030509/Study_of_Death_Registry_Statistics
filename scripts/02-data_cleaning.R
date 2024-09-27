@@ -1,9 +1,9 @@
+
 #### Preamble ####
 # Purpose: Cleans the raw marriage data into an analysis dataset
 # Author: Doran Wang
 # Date: 23 September 2024
 # Contact: doran.wang@mail.utoronto.ca 
-# License: MIT
 # Pre-requisites: Need to download the data
 
 
@@ -12,7 +12,7 @@ library(tidyverse)
 library(janitor)
 
 #### Clean data ####
-raw_data <- read_csv("Sta304-Term-Paper-1/data/raw_data/raw_data.csv")
+raw_data <- read_csv("data/raw_data/death_registry.csv")
 
 # Clean and process the data
 cleaned_data <- 
@@ -20,11 +20,22 @@ cleaned_data <-
   janitor::clean_names() |>  # Clean column names to snake_case
   separate(col = time_period,  # Separate 'time_period' into 'year' and 'month'
            into = c("year", "month"),
-           sep = "-") |> 
-  mutate(date = lubridate::ymd(paste(year, month, "01", sep = "-")),  # Create a date column
+           sep = "-",
+           convert = TRUE) |>   # Convert year and month to integer
+  mutate(date = sprintf("%s-%s", year, str_pad(month, 2, pad = "0")),  # Create a date column with day
          civic_centre = str_to_upper(civic_centre),  # Convert civic centre names to uppercase
-         place_of_death = str_to_title(place_of_death))  # Convert place of death to title case
+         place_of_death = str_to_title(place_of_death),  # Convert place of death to title case
+         session = case_when(  # Assign session based on month
+           month %in% c(3, 4, 5) ~ "Spring",
+           month %in% c(6, 7, 8) ~ "Summer",
+           month %in% c(9, 10, 11) ~ "Fall",
+           month %in% c(12, 1, 2) ~ "Winter",
+           TRUE ~ NA_character_))  # Handle any unexpected values
+
+
+# Another clean and process the data
+
 
 #### Save data ####
 # Save the cleaned data to the analysis folder
-write_csv(cleaned_data, "C:/Users/User/Documents/Sta304-Term-Paper-1/data/analysis_data/analysis_data.csv")
+write_csv(cleaned_data, "data/analysis_data/analysis_data.csv")

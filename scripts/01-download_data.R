@@ -1,7 +1,8 @@
+
 #### Preamble ####
 # Purpose: Downloads and saves the data from Open Data Toronto
 # Author: Doran Wang
-# Date: 23 September
+# Date: 23 September 2024
 # Contact: doran.wang@mail.utoronto.ca
 # License: MIT
 
@@ -28,5 +29,5 @@ data <- filter(datastore_resources, row_number()==1) %>%
   get_resource()
 
 #### Save data ####
-write_csv(data, "C:/Users/User/Documents/Sta304-Term-Paper-1/data/raw_data/raw_data.csv") 
-         
+write_csv(data, "data/raw_data/death_registry.csv") 
+
