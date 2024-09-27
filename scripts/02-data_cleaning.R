@@ -24,16 +24,13 @@ cleaned_data <-
            convert = TRUE) |>   # Convert year and month to integer
   mutate(civic_centre = str_to_upper(civic_centre),  # Convert civic centre names to uppercase
          place_of_death = str_to_title(place_of_death),  # Convert place of death to title case
+         month = month.abb[month],
          season = case_when(  # Assign session based on month
-           month %in% c(3, 4, 5) ~ "Spring",
-           month %in% c(6, 7, 8) ~ "Summer",
-           month %in% c(9, 10, 11) ~ "Fall",
-           month %in% c(12, 1, 2) ~ "Winter",
+           month %in% c("Mar", "Apr", "May") ~ "Spring",
+           month %in% c("Jun", "Jul", "Aug") ~ "Summer",
+           month %in% c("Sep", "Oct", "Nov") ~ "Fall",
+           month %in% c("Dec", "Jan", "Feb") ~ "Winter",
            TRUE ~ NA_character_))  # Handle any unexpected values
-
-
-# Another clean and process the data
-
 
 #### Save data ####
 # Save the cleaned data to the analysis folder
