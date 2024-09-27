@@ -21,8 +21,21 @@ bibliography: references.bib
 
 library(tidyverse)
 library(ggplot2)
+library(dplyr)
+library(readr)
+library(janitor)
+library(opendatatoronto)
 library(knitr)
-data <- read.csv("https://raw.githubusercontent.com/Wang20030509/Study_of_Death_Registry_Statistics/refs/heads/main/data/analysis_data/analysis_data.csv")
+library(here)
+
+raw_data <- read_csv("../data/raw_data/death_registry.csv",
+                    show_col_types = FALSE)
+data <- read_csv("../data/analysis_data/cleaned_data.csv",
+                 show_col_types = FALSE)
+total_deaths <- read_csv("../data/analysis_data/summarize_data.csv",
+                         show_col_types = FALSE)
+avg_death <- read_csv("../data/analysis_data/avg_deaths_by_month.csv",
+                      show_col_types = FALSE)
 ```
 
 # Introduction
@@ -37,12 +50,22 @@ The remainder of this paper is structured as follows. @sec-data....
 
 Some of our data is of deaths (@fig-deaths), from @deathRegistryData.
 
-### Overview Data
-
+## Overview Data
 ```{r}
 #| echo: false
 #| eval: true
 #| label: tbl-death_registry_data
+#| tbl-cap: "Sample Data"
+#| warning: false
+kable(head(raw_data))
+
+```
+
+## Cleaned Data
+```{r}
+#| echo: false
+#| eval: true
+#| label: tbl-cleaned_death_registry_data
 #| tbl-cap: "Sample Data"
 #| warning: false
 
@@ -61,14 +84,12 @@ The
 #| fig-cap: Total Death Toll by Season and Region (2011-2023)
 #| echo: false
 
-total_deaths <- aggregate(death_licenses ~ season + civic_centre, data = data, sum)
-
 ggplot(total_deaths, aes(x = season, y = death_licenses, fill = season)) +
   geom_bar(stat = "identity", alpha = 1) +  
   scale_fill_manual(values = c("darkorange", "purple", "cyan4", "red")) +  
   theme_minimal() +
   facet_wrap(~civic_centre, ncol = 2, scales = "free_y") +  
-  labs(x = "Season", y = "Total Death Toll") +
+  labs(x = "Season", y = "Total Death Toll", fill = "Season") +
   coord_flip()
 
 ```
@@ -79,16 +100,12 @@ ggplot(total_deaths, aes(x = season, y = death_licenses, fill = season)) +
 #| fig-cap: Total Death toll by Season (2011-2023)
 #| echo: false
 
-# Aggregate data by year and session
-total_deaths <- aggregate(death_licenses ~ year + season, data = data, sum)
-
 # Plot the total deaths from 2011 to 2024
 ggplot(total_deaths, aes(x = season, y = death_licenses, fill = season)) +
   geom_bar(stat = "identity", alpha = 1) +
-  scale_fill_manual(values = c("darkorange", "purple", "cyan4", "red"),
-                    guide = "none") + 
+  scale_fill_manual(values = c("darkorange", "purple", "cyan4", "red")) + 
   theme_minimal() +
-  labs(x = "Session", y = "Total Death Toll") +
+  labs(x = "Session", y = "Total Death Toll", fill = "Season") +
   coord_flip()
 
 ```
@@ -97,16 +114,17 @@ ggplot(total_deaths, aes(x = season, y = death_licenses, fill = season)) +
 #| fig-cap: Average Death Toll by Month (2011-2023)
 #| echo: false
 
-# Aggregate data by month and calculate the mean death toll across years
-avg_deaths_by_month <- aggregate(death_licenses ~ month, data = data, FUN = mean)
+avg_death$month <- factor(avg_death$month, 
+                          levels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", 
+                                     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
 
 # Plot the average deaths by month from 2011 to 2023
-ggplot(avg_deaths_by_month, aes(x = factor(month), y = death_licenses, fill = factor(month))) +
+ggplot(avg_death, aes(x = factor(month), y = death_licenses, fill = factor(month))) +
   geom_bar(stat = "identity", alpha = 1) +
   theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
   theme_minimal() +
   theme_light() +
-  labs(x = "Month", y = "Average Death Toll") 
+  labs(x = "Month", y = "Average Death Toll", fill = "Month") 
 ```
 
 
@@ -119,7 +137,6 @@ And also planes (@fig-planes). (You can change the height and width, but don't w
 #| warning: false
 #| message: false
 
-analysis_data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
 
 ```
 
@@ -129,19 +146,6 @@ analysis_data <- read_csv(here::here("data/analysis_data/analysis_data.csv"))
 # Results
 
 Our results are summarized in @tbl-modelresults.
-
-```{r}
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-library(rstanarm)
-
-first_model <-
-  readRDS(file = here::here("models/first_model.rds"))
-```
-
 
 
 
@@ -178,17 +182,6 @@ In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. 
 
 In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
 
-```{r}
-#| eval: true
-#| echo: false
-#| message: false
-#| warning: false
-#| label: fig-ppcheckandposteriorvsprior
-#| layout-ncol: 2
-#| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
-
-```
 
 ## Diagnostics
 
@@ -196,20 +189,7 @@ In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. Th
 
 @fig-stanareyouokay-2 is a Rhat plot. It shows... This suggests...
 
-```{r}
-#| echo: false
-#| eval: true
-#| message: false
-#| warning: false
-#| label: fig-stanareyouokay
-#| fig-cap: "Checking the convergence of the MCMC algorithm"
-#| fig-subcap: ["Trace plot", "Rhat plot"]
-#| layout-ncol: 2
 
-plot(first_model, "trace")
-
-plot(first_model, "rhat")
-```
 
 
 
